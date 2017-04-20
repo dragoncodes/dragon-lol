@@ -1,0 +1,19 @@
+$winColor: #038a00;
+$loseColor: #E92116;
+
+.win-text {
+  color: $winColor;
+}
+
+.lose-text {
+  color: $loseColor;
+}
+
+.match-holder {
+  -moz-box-shadow: 0 0 38px #000;
+  -webkit-box-shadow: 0 0 38px #000;
+  box-shadow: 0 0 18px #000;
+  border: 1px solid rgba(78, 79, 102, 0.6);
+  margin: 1em;
+  padding: 1em;
+}
