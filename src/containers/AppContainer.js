@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { browserHistory, Router, useRouterHistory } from 'react-router'
 import { Provider } from 'react-redux'
 import { createHistory } from 'history'
-import con from '../../config/environments.config';
+import conf from '../../config/environments.config';
 
 class AppContainer extends Component {
 
@@ -20,7 +20,7 @@ class AppContainer extends Component {
         const { routes, store } = this.props
 
         const history = useRouterHistory(createHistory)({
-            basename: '/' + con[process.env.NODE_ENV]({}).base_public_path
+            basename: '/' + conf[ process.env.NODE_ENV ]({}).base_public_path
         })
 
         return (
@@ -28,6 +28,7 @@ class AppContainer extends Component {
                 <div style={{ height: '100%' }}>
                     <Router history={history} children={routes}/>
                 </div>
+
             </Provider>
         )
     }

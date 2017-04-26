@@ -1,0 +1,27 @@
+.champion-frame {
+  border: 3px solid;
+}
+
+.name-holder {
+  overflow: hidden;
+  white-space: nowrap;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+
+.participant-holder {
+  min-height: 10em;
+}
+
+.kill-participant {
+  width: 4em;
+}
+
+.assists-champ {
+  width: 2em;
+}
+
+.kill-feed {
+  height: 8.2em;
+  overflow: auto;
+}

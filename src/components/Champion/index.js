@@ -33,16 +33,16 @@ class Champion extends React.Component {
     render () {
         const { customRender, champions, championId } = this.props
 
-        if (customRender) {
-            return this.customRender(champions, championId)
-        }
-
         let championLoading = !champions || !champions[ championId ]
 
         if (championLoading) {
             return (
                 <div>Loading champion</div>
             )
+        }
+
+        if (customRender) {
+            return customRender(champions, championId)
         }
 
         return this.renderChampion(champions[ championId ])
@@ -53,7 +53,7 @@ class Champion extends React.Component {
 
         return (
             <div className='champion-card'>
-                <img className='champion-image' src={champion.image}/>
+                <img crossOrigin='' className='champion-image' src={champion.image}/>
 
                 {showName ? (
                     <div className='champion-title'>

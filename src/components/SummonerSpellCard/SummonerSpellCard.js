@@ -8,6 +8,7 @@ class SummonerSpellCard extends React.Component {
         summonerSpellId: React.PropTypes.number.isRequired,
         summonerSpellImages: React.PropTypes.object,
 
+        imageWidth: React.PropTypes.string,
         loadSummonerSpell: React.PropTypes.func.isRequired
         };
 
@@ -20,7 +21,7 @@ class SummonerSpellCard extends React.Component {
     }
 
     render () {
-        const { summonerSpellImages = {}, summonerSpellId } = this.props
+        const { summonerSpellImages = {}, summonerSpellId, imageWidth = '35em' } = this.props
 
         let summonerSpellImage = summonerSpellImages[ summonerSpellId ]
 
@@ -30,7 +31,7 @@ class SummonerSpellCard extends React.Component {
 
         return (
             <div className='summoner-spell-holder'>
-                <img width='35em' src={summonerSpellImage.imageUrl} alt='SummonerSpell'/>
+                <img width={imageWidth} src={summonerSpellImage.imageUrl} alt='SummonerSpell'/>
             </div>
         )
     }

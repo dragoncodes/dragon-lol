@@ -8,7 +8,11 @@ export const RiotActions = {
 
     MatchesLoaded: 'MATHCES_LOADED',
 
-    SummonerSpellLoaded: 'SUMMONER_SPELL_LOADED'
+    SummonerSpellLoaded: 'SUMMONER_SPELL_LOADED',
+
+    ItemLoaded: 'ITEM_LOADED',
+
+    MatchDataLoaded: 'MATCH_DATA_LOADED'
 }
 
 // +======= Actions =========+
@@ -73,6 +77,20 @@ export const riotReducer = (state = {}, action = {}) => {
             return {
                 ...state,
                 summonerSpellImages: newSummonerSpellImages
+            }
+
+        case RiotActions.ItemLoaded:
+
+            let oldItems = state.items || {};
+
+            let newItems = {
+                ...oldItems,
+                [action.item.id]: action.item
+            }
+
+            return {
+                ...state,
+                items: newItems
             }
 
         default:

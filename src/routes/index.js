@@ -2,6 +2,7 @@
 import CoreLayout from '../layouts/CoreLayout'
 import Home from './Home'
 import MatchesRoute from './Matches'
+import MatchRoute from './MatchReplay'
 
 /*  Note: Instead of using JSX, we recommend using react-router
  PlainRoute objects to build route definitions.   */
@@ -11,7 +12,8 @@ export const createRoutes = (store) => ({
     component: CoreLayout,
     indexRoute: Home,
     childRoutes: [
-        MatchesRoute(store)
+        MatchesRoute(store),
+        MatchRoute(store)
     ]
 })
 

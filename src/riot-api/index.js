@@ -1,11 +1,12 @@
 import cache from 'memory-cache'
+import conf from '../../config/environments.config';
 
-export const API_URL = 'http://ec2-54-93-105-54.eu-central-1.compute.amazonaws.com/riot-api';
+export const API_URL = conf[ process.env.NODE_ENV ]({}).api_url;
 
 var _instance = null
 export class RiotApi {
     constructor () {
-        this.summonerName = 'DragonCodes'
+        this.summonerName = location.hash.replace('#', '') || 'DragonCodes'
 
         this._endPoints = {
             SUMMONER_V3: `/summoner/${this.summonerName}`,
@@ -15,7 +16,11 @@ export class RiotApi {
 
             MATCH_HISTORY: '/match-history/{summonerId}',
 
-            SUMMONER_SPELL: '/summoner-spell/{spellId}'
+            SUMMONER_SPELL: '/summoner-spell/{spellId}',
+
+            ITEMS: '/items/{itemId}',
+
+            MATCH_DATA: '/match-data/{matchId}'
         }
     }
 
@@ -33,7 +38,7 @@ export class RiotApi {
                 return this.buildRequest(this._endPoints.CHAMPION_BY_ID + championId)
                     .then((data) => {
                         if (data.image.full) {
-                            data.image = 'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/' + data.image.full
+                            data.image = '//ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/' + data.image.full
                         }
 
                         return data
@@ -44,6 +49,11 @@ export class RiotApi {
 
     get Summoner () {
         return {
+
+            Name: ()=> {
+                return this.summonerName;
+            },
+
             Profile: () => {
                 return this.buildRequest(this._endPoints.SUMMONER_V3).then((data) => {
                     this._summonerId = data.id
@@ -80,15 +90,46 @@ export class RiotApi {
 
     get Misc () {
         return {
-            SummonerSpellImage: (spellId = 0) => {
+            SummonerSpellImage: (spellId = '') => {
                 return this.buildRequest(this._endPoints.SUMMONER_SPELL.replace('{spellId}', spellId))
                     .then((summonerSpell) => {
                         summonerSpell.imageUrl = 'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/spell/' + summonerSpell.image.full
 
                         return summonerSpell
                     })
+            },
+
+            Items: (itemId = '') => {
+                return this.buildRequest(this._endPoints.ITEMS.replace('{itemId}', itemId))
+                    .then((item) => {
+                        item.imageUrl = 'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/' + item.image.full
+
+                        return item
+                    })
+            },
+
+            MinionsImageUrl: () => {
+                return 'http://ddragon.leagueoflegends.com/cdn/5.5.1/img/ui/minion.png'
+            },
+
+            GoldImageUrl: () => {
+                return 'http://ddragon.leagueoflegends.com/cdn/5.5.1/img/ui/gold.png'
+            },
+
+            Match: (matchId) => {
+                if (!this._summonerId) {
+                    return this.Summoner.Profile().then(() => {
+                        return this.getMatchReplayRequest(matchId)
+                    })
+                }
+
+                return this.getMatchReplayRequest(matchId)
             }
         }
+    }
+
+    getMatchReplayRequest (matchId) {
+        return this.buildRequest(this._endPoints.MATCH_DATA.replace('{matchId}', matchId))
     }
 
     getRecentMatchesRequest (summonerId) {
