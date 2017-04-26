@@ -170,7 +170,12 @@ export default class MatchesComponent extends React.Component {
     }
 
     handleChangeFrame (event) {
-        let frame = event.target.value;
+        let frame = event.target.value || 1;
+
+        if (frame < 0 || frame > this.state.frameData.length - 1) {
+            frame = this.state.frameData.length - 1;
+        }
+
         this.setState({
             frame
         })
@@ -264,7 +269,9 @@ export default class MatchesComponent extends React.Component {
                 type = 'Team Builder';
                 break;
 
-            case 'BOT_5x5_INTRO': case 'BOT_5x5_BEGINNER': case 'BOT_5x5_INTERMEDIATE':
+            case 'BOT_5x5_INTRO':
+            case 'BOT_5x5_BEGINNER':
+            case 'BOT_5x5_INTERMEDIATE':
                 type = 'Bots Game'
                 break;
 
