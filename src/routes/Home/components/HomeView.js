@@ -1,7 +1,6 @@
 import React from 'react'
 import SummonerCard from 'components/SummonerCard'
 import TopChampions from 'components/TopChampions'
-import RiotDisclaimer from '../../../components/RiotDisclaimer'
 import './HomeView.scss'
 
 export default class HomeView extends React.Component {
@@ -23,8 +22,6 @@ export default class HomeView extends React.Component {
 
                 <div className='label-top-champs'>My Best Champions</div>
                 <TopChampions />
-
-                <RiotDisclaimer />
             </div>
         )
     }

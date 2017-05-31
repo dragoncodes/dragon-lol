@@ -31,7 +31,7 @@ class TopChampions extends React.Component {
 
     renderChampions (topChampions, profileInfo) {
         return (
-            <div className='top-champions'>
+            <div className='top-champions row'>
                 { topChampions.map((el, index) => {
                     return (
                         <div key={index} className='top-champion col-md-4'>

@@ -114,11 +114,11 @@ export default class MatchesComponent extends React.Component {
         }
 
         if (match.teams[ 0 ].teamId == friendlyTeamId) {
-            friendlyTeam.isWinner = match.teams[ 0 ].winner;
-            enemyTeam.isWinner = match.teams[ 1 ].winner;
+            friendlyTeam.isWinner = match.teams[ 0 ].win === 'Win';
+            enemyTeam.isWinner = match.teams[ 1 ].win === 'Win';
         } else {
-            friendlyTeam.isWinner = match.teams[ 1 ].winner;
-            enemyTeam.isWinner = match.teams[ 0 ].winner;
+            friendlyTeam.isWinner = match.teams[ 1 ].win === 'Win';
+            enemyTeam.isWinner = match.teams[ 0 ].win === 'Win';
         }
 
         this.setState({
@@ -201,8 +201,8 @@ export default class MatchesComponent extends React.Component {
 
                 <div className="metadata-holder">
                     <div className='region'>{this.renderRegion(match.region)}</div>
-                    <div className='mode'>{this.renderMatchMode(match.matchMode)}</div>
-                    <div className='queueType'>{this.renderQueueType(match.queueType)}</div>
+                    <div className='mode'>{this.renderMatchMode(match.gameMode)}</div>
+                    <div className='queueType'>{this.renderQueueType(match.queueId)}</div>
                 </div>
 
                 <div className="col-md-12">
@@ -242,52 +242,52 @@ export default class MatchesComponent extends React.Component {
     renderQueueType (queueType) {
         let type = ''
         switch (queueType) {
-            case 'TEAM_BUILDER_RANKED_SOLO':
+            case 420:
                 type = 'Ranked Team Builder'
 
                 break;
-            case 'RANKED_FLEX_SR':
+            case 440:
                 type = 'Ranked Flex'
 
                 break;
 
-            case 'TEAM_BUILDER_DRAFT_UNRANKED_5x5':
+            case 400:
                 type = 'Normal 5v5 Draft Pick'
 
                 break;
 
-            case 'ARSR_5x5':
+            case 325:
                 type = 'ARAM Urf'
 
                 break;
 
-            case 'ARAM_5x5':
+            case 65:
                 type = 'ARAM'
 
                 break;
-            case 'GROUP_FINDER_5x5':
+            case 61:
                 type = 'Team Builder';
                 break;
 
-            case 'BOT_5x5_INTRO':
-            case 'BOT_5x5_BEGINNER':
-            case 'BOT_5x5_INTERMEDIATE':
+            case 31:
+            case 32:
+            case 33:
                 type = 'Bots Game'
                 break;
 
-            case 'RANKED_SOLO_5x5':
+            case 4:
                 type = 'Ranked Solo 5v5'
                 break;
 
-            case 'NORMAL_5x5_DRAFT':
+            case 14:
                 type = 'Normal 5v5 Draft Pick'
                 break;
 
-            case 'NORMAL_5x5_BLIND':
+            case 2:
                 type = 'Normal 5v5 Blind Pick'
                 break;
 
-            case 'CUSTOM':
+            case 0:
                 type = 'Custom game'
                 break;
 

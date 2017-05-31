@@ -11,7 +11,7 @@ export const loadMatches = () => {
             (payload) => {
                 dispatch({
                     type: RiotActions.MatchesLoaded,
-                    matches: payload.games
+                    matches: payload
                 })
             }
         )
@@ -31,7 +31,9 @@ export default function matchesReducer (state = initialState, action = {}) {
 
         case RiotActions.MatchesLoaded:
 
-            return action.matches
+            console.log(action);
+
+            return !action.matches ? state : action.matches;
 
         default:
             return state

@@ -20,6 +20,6 @@ export default (store) => ({
             cb(null, Match)
 
             /* Webpack named bundle   */
-        }, 'match')
+        }, 'replay-match')
     }
 });

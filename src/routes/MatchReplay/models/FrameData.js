@@ -46,7 +46,7 @@ export class FrameData {
             for (let i = 0; i < events.length; i++) {
 
                 const event = events[ i ];
-                switch (event.eventType) {
+                switch (event.type) {
                     case EventTypes.ChampionKill:
                         this._killFeed.push({
                             killerId: event.killerId,

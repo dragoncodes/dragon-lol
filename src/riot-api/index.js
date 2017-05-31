@@ -1,11 +1,11 @@
 import cache from 'memory-cache'
 import conf from '../../config/environments.config';
 
-export const API_URL = conf[ process.env.NODE_ENV ]({}).api_url;
+export const API_URL = conf[process.env.NODE_ENV]({}).api_url;
 
 var _instance = null
 export class RiotApi {
-    constructor () {
+    constructor() {
         this.summonerName = location.hash.replace('#', '') || 'DragonCodes'
 
         this._endPoints = {
@@ -20,11 +20,13 @@ export class RiotApi {
 
             ITEMS: '/items/{itemId}',
 
-            MATCH_DATA: '/match-data/{matchId}'
+            MATCH_DATA: '/match-data/{matchId}',
+
+            MATCH_TIMELINE: '/match-data/timeline/{matchId}'
         }
     }
 
-    static get Instance () {
+    static get Instance() {
         if (!_instance) {
             _instance = new RiotApi()
         }
@@ -32,7 +34,7 @@ export class RiotApi {
         return _instance
     }
 
-    get Champions () {
+    get Champions() {
         return {
             ById: (championId) => {
                 return this.buildRequest(this._endPoints.CHAMPION_BY_ID + championId)
@@ -47,7 +49,7 @@ export class RiotApi {
         }
     }
 
-    get Summoner () {
+    get Summoner() {
         return {
 
             Name: ()=> {
@@ -57,6 +59,7 @@ export class RiotApi {
             Profile: () => {
                 return this.buildRequest(this._endPoints.SUMMONER_V3).then((data) => {
                     this._summonerId = data.id
+                    this._accountId = data.accountId
 
                     return data
                 })
@@ -76,24 +79,26 @@ export class RiotApi {
                 return this.getTopChampionsRequest()
             },
 
-            RecentMatches: (summonerId = this._summonerId) => {
-                if (!summonerId) {
+            RecentMatches: (accountId = this._summonerId) => {
+                if (!accountId) {
                     return this.Summoner.Profile().then(() => {
                         return this.getRecentMatchesRequest(this._summonerId)
                     })
                 }
 
-                return this.getRecentMatchesRequest(summonerId)
+                return this.getRecentMatchesRequest(accountId)
             }
         }
     }
 
-    get Misc () {
+    get Misc() {
         return {
             SummonerSpellImage: (spellId = '') => {
                 return this.buildRequest(this._endPoints.SUMMONER_SPELL.replace('{spellId}', spellId))
                     .then((summonerSpell) => {
-                        summonerSpell.imageUrl = 'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/spell/' + summonerSpell.image.full
+                        if (summonerSpell.image && summonerSpell.image.full) {
+                            summonerSpell.imageUrl = 'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/spell/' + summonerSpell.image.full
+                        }
 
                         return summonerSpell
                     })
@@ -128,37 +133,42 @@ export class RiotApi {
         }
     }
 
-    getMatchReplayRequest (matchId) {
-        return this.buildRequest(this._endPoints.MATCH_DATA.replace('{matchId}', matchId))
+    getMatchReplayRequest(matchId) {
+        return Promise.all([
+            this.buildRequest(this._endPoints.MATCH_DATA.replace('{matchId}', matchId)),
+            this.buildRequest(this._endPoints.MATCH_TIMELINE.replace('{matchId}', matchId))
+        ]).then((data)=> {
+
+            const matchData = data[0];
+            const timelineData = data[1];
+
+            const result = {
+                ...matchData,
+
+                timeline: {
+                    ...timelineData
+                }
+            };
+
+            return result;
+        });
     }
 
-    getRecentMatchesRequest (summonerId) {
+    getRecentMatchesRequest(summonerId) {
         return this.buildRequest(this._endPoints.MATCH_HISTORY.replace('{summonerId}', summonerId)).then((payload) => {
-            this.payload = payload
-
-            return payload
+            return payload.games
         })
     }
 
-    getTopChampionsRequest () {
+    getTopChampionsRequest() {
         return this.buildRequest(this._endPoints.TOP_CHAMPIONS.replace('{summonerId}', this._summonerId))
-            .then((champions) => {
-                champions.sort((a, b) => {
-                    return b.championLevel - a.championLevel
-                })
-
-                let swap = champions[ 1 ]
-                champions[ 1 ] = champions[ 0 ]
-                champions[ 0 ] = swap
-
-                return champions
-            })
     }
 
-    buildRequest (endPoint, overrideURL = null) {
+    buildRequest(endPoint, overrideURL = null) {
         var url = this.buildUrl(endPoint, overrideURL)
 
         let promise = new Promise((resolve, reject) => {
+
             // Check for cached response
             let cachedResponse = cache.get(url)
 
@@ -195,7 +205,7 @@ export class RiotApi {
         return cache.get('a_' + url)
     }
 
-    buildUrl (endPoint) {
+    buildUrl(endPoint) {
         return API_URL + endPoint
     }
 }
