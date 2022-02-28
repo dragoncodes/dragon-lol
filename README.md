@@ -9,9 +9,6 @@ in design shows rendering remotely fetched data and displaying useful statistics
 
 Over the course of the next few months this project will expand and show more and more statistics for my fellow League players to use and obtain more game knowledge.
 
-Currently the support for other people is very limited only Europe West is supported and to check your own statistics you must go to
-http://dragoncodes.eu/reactive-league#SUMMONER_NAME
-
 # Running the code
 I have a custom Back-End for this project in order to hide my Riot API key as per Riot's suggestions - this is only the Front-End.
  
